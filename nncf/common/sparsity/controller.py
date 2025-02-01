@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Intel Corporation
+# Copyright (c) 2024 Intel Corporation
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -9,22 +9,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from abc import abstractmethod
+
 from nncf.api.compression import CompressionAlgorithmController
-from nncf.api.compression import CompressionLoss
-
-
-class SparsityLoss(CompressionLoss):
-    def __init__(self) -> None:
-        super().__init__()
-        self.current_sparsity: float = 0.0
 
 
 class SparsityController(CompressionAlgorithmController):
     """
     This is the class from which all sparsity controllers inherit.
     """
-
-    loss: SparsityLoss
 
     def set_sparsity_level(self, sparsity_level: float) -> None:
         """
@@ -36,4 +29,11 @@ class SparsityController(CompressionAlgorithmController):
     def freeze(self) -> None:
         """
         Freezes all sparsity masks. Sparsity masks will not be trained after calling this method.
+        """
+
+    @property
+    @abstractmethod
+    def current_sparsity_level(self) -> float:
+        """
+        Returns the current sparsity level of the underlying model.
         """
